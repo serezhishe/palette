@@ -1,0 +1,22 @@
+{
+  "name": "palette",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rolling-scopes-school/serezhishe-2019Q1.git"
+  },
+  "keywords": [
+    "palette"
+  ],
+  "author": "serezhishe",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/rolling-scopes-school/serezhishe-2019Q1/issues"
+  },
+  "homepage": "https://github.com/rolling-scopes-school/serezhishe-2019Q1#readme"
+}
