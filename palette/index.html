@@ -10,10 +10,26 @@
 <body>
   <header>CodeJam - Palette</header>
   <main>
-    <aside class="palette"></aside>
-    <aside class="colors"></aside>
+    <aside id="palette">
+      <div id="colorTools">
+        <div id="paintBucket"></div>
+        <div id="colorPicker"></div>
+      </div>
+      <div id="transformTools"></div>
+    </aside>
+    <aside id="colors">
+      <div id="changebale">
+        <div id="current"></div>
+        <div id="previous"></div>
+      </div>
+      <div id="predefined">
+        <div id="first"></div>
+        <div id="second"></div>
+        <input type="color">
+      </div>
+    </aside>
     <canvas>
-      
+
     </canvas>
   </main>
   <script src="./src/index.js"></script>
