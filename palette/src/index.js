@@ -5,6 +5,13 @@ canvas.width = document.getElementsByTagName('main')[0].offsetWidth
 let height = Math.round(canvas.height*0.8 / 3)
 let width = height
 
+const activeTool = {
+  paintBucket: false,
+  colorPicker: false,
+  move: false,
+  transform: false 
+}
+
 let figures = []
 class Figure {
   constructor(x, y, color, form) {
@@ -16,6 +23,7 @@ class Figure {
     this.form = form
   }
 }
+
 let x = canvas.width - 3 * (width + 10) - 50
 let y = canvas.height / 10
 for (let i = 0; i < 9; i++) {
@@ -35,4 +43,40 @@ figures.forEach(el => {
     cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI*2,true)
     cnv.fill()
   }
+})
+
+let paintBucket = document.getElementById('paintBucket')
+paintBucket.addEventListener('click', () => {
+  activeTool.paintBucket = true
+  activeTool.colorPicker = false
+  activeTool.move = false
+  activeTool.transform = false
+  console.log(activeTool)
+})
+
+let colorPicker = document.getElementById('colorPicker')
+colorPicker.addEventListener('click', () => {
+  activeTool.paintBucket = false
+  activeTool.colorPicker = true
+  activeTool.move = false
+  activeTool.transform = false
+  console.log(activeTool)
+})
+
+let move = document.getElementById('move')
+move.addEventListener('click', () => {
+  activeTool.paintBucket = false
+  activeTool.colorPicker = false
+  activeTool.move = true
+  activeTool.transform = false
+  console.log(activeTool)
+})
+
+let transform = document.getElementById('transform')
+transform.addEventListener('click', () => {
+  activeTool.paintBucket = false
+  activeTool.colorPicker = false
+  activeTool.move = false
+  activeTool.transform = true
+  console.log(activeTool)
 })
