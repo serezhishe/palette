@@ -47,6 +47,13 @@ figures.forEach((el) => {
 
 const current = document.getElementById('curr');
 const previous = document.getElementById('prev');
+const first = document.getElementById('first');
+const redColor = document.getElementById('red');
+const second = document.getElementById('second');
+const blueColor = document.getElementById('blue');
+const personal = document.getElementById('personal');
+const input = document.getElementsByTagName('input')[0];
+let personalColor = input.value;
 let currentColor = window.getComputedStyle(current, null).getPropertyValue('background-color');
 let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
 
@@ -97,7 +104,7 @@ function liesIn(event, fig) {
     }
     return false;
   }
-  if (((((event.offsetX - fig.centerX) ** 2) + ((event.offsetY - fig.centerY) ** 2)) ** 0.5) < width) return true;
+  if (((((event.offsetX - fig.centerX) ** 2) + ((event.offsetY - fig.centerY) ** 2)) ** 0.5) < width / 2) return true;
   return false;
 }
 
@@ -132,7 +139,41 @@ canvas.addEventListener('click', (e) => {
 document.getElementById('previous').addEventListener('click', () => {
   current.style.backgroundColor = previousColor;
   previous.style.backgroundColor = currentColor;
-  const tmp = previousColor;
+  let tmp = previousColor;
   previousColor = currentColor;
   currentColor = tmp;
 });
+
+document.getElementById('first').addEventListener('click', () => {
+  if (currentColor !== window.getComputedStyle(redColor, null).getPropertyValue('background-color')) {
+    previous.style.backgroundColor = currentColor;
+    previousColor = currentColor;
+    currentColor = window.getComputedStyle(redColor, null).getPropertyValue('background-color');
+    current.style.backgroundColor = currentColor;
+  }
+});
+
+document.getElementById('second').addEventListener('click', () => {
+  if (currentColor !== window.getComputedStyle(blueColor, null).getPropertyValue('background-color')) {
+    previous.style.backgroundColor = currentColor;
+    previousColor = currentColor;
+    currentColor = window.getComputedStyle(blueColor, null).getPropertyValue('background-color');
+    current.style.backgroundColor = currentColor;
+  }
+});
+
+document.getElementById('personal').addEventListener('click', () => {
+  if (currentColor !== personalColor) {
+    previous.style.backgroundColor = currentColor;
+    previousColor = currentColor;
+    currentColor = personalColor;
+    current.style.backgroundColor = currentColor;
+  }
+});
+
+personal.addEventListener('click', () => {
+  input.addEventListener("change", event => {
+    personalColor = event.target.value
+  });
+  input.select();
+})
