@@ -1,137 +1,138 @@
-let canvas = document.getElementsByTagName('canvas')[0]
-let cnv = canvas.getContext('2d')
-canvas.height = document.getElementsByTagName('main')[0].offsetHeight
-canvas.width = document.getElementsByTagName('main')[0].offsetWidth
-let height = Math.round(canvas.height*0.8 / 3)
-let width = height
+const canvas = document.getElementsByTagName('canvas')[0];
+const cnv = canvas.getContext('2d');
+canvas.height = document.getElementsByTagName('main')[0].offsetHeight;
+canvas.width = document.getElementsByTagName('main')[0].offsetWidth;
+const height = Math.round(canvas.height * 0.8 / 3);
+const width = height;
 
 const activeTool = {
   paintBucket: false,
   colorPicker: false,
   move: false,
-  transform: false 
-}
+  transform: false,
+};
 
-let figures = []
+const figures = [];
 class Figure {
   constructor(x, y, color, shape) {
-    this.x = x,
-    this.y = y,
-    this.centerX = x + width / 2,
-    this.centerY = y + height / 2,
-    this.color = color,
-    this.shape = shape
+    this.x = x;
+    this.y = y;
+    this.centerX = x + width / 2;
+    this.centerY = y + height / 2;
+    this.color = color;
+    this.shape = shape;
   }
 }
 
-let x = canvas.width - 3 * (width + 10) - 50
-let y = canvas.height / 10
-for (let i = 0; i < 9; i++) {
-  figures.push(new Figure(x, y, '#C4C4C4', 'rectangle'))
-  x += width + 10
-  if (i % 3 == 2) {
-    x = canvas.width - 3 * (width + 10) - 50
-    y += height + 10
+let x = canvas.width - 3 * (width + 10) - 50;
+let y = canvas.height / 10;
+for (let i = 0; i < 9; i += 1) {
+  figures.push(new Figure(x, y, '#C4C4C4', 'rectangle'));
+  x += width + 10;
+  if (i % 3 === 2) {
+    x = canvas.width - 3 * (width + 10) - 50;
+    y += height + 10;
   }
 }
-figures[6].shape = 'circle'
-figures.forEach(el => {
-  cnv.fillStyle = el.color
-  if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height)
+figures[6].shape = 'circle';
+figures.forEach((el) => {
+  cnv.fillStyle = el.color;
+  if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height);
   if (el.shape === 'circle') {
-    cnv.beginPath()
-    cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI*2,true)
-    cnv.fill()
+    cnv.beginPath();
+    cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI * 2, true);
+    cnv.fill();
   }
-})
+});
 
-let current = document.getElementById('curr')
-let previous = document.getElementById('prev')
-let currentColor = window.getComputedStyle(current, null).getPropertyValue("background-color")
-let previousColor = window.getComputedStyle(previous, null).getPropertyValue("background-color")
+const current = document.getElementById('curr');
+const previous = document.getElementById('prev');
+let currentColor = window.getComputedStyle(current, null).getPropertyValue('background-color');
+let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
 
-let paintBucket = document.getElementById('paintBucket')
+const paintBucket = document.getElementById('paintBucket');
 paintBucket.addEventListener('click', () => {
-  activeTool.paintBucket = true
-  activeTool.colorPicker = false
-  activeTool.move = false
-  activeTool.transform = false
-})
+  activeTool.paintBucket = true;
+  activeTool.colorPicker = false;
+  activeTool.move = false;
+  activeTool.transform = false;
+});
 
-let colorPicker = document.getElementById('colorPicker')
+const colorPicker = document.getElementById('colorPicker');
 colorPicker.addEventListener('click', () => {
-  activeTool.paintBucket = false
-  activeTool.colorPicker = true
-  activeTool.move = false
-  activeTool.transform = false
-})
+  activeTool.paintBucket = false;
+  activeTool.colorPicker = true;
+  activeTool.move = false;
+  activeTool.transform = false;
+});
 
-let move = document.getElementById('move')
+const move = document.getElementById('move');
 move.addEventListener('click', () => {
-  activeTool.paintBucket = false
-  activeTool.colorPicker = false
-  activeTool.move = true
-  activeTool.transform = false
-})
+  activeTool.paintBucket = false;
+  activeTool.colorPicker = false;
+  activeTool.move = true;
+  activeTool.transform = false;
+});
 
-let transform = document.getElementById('transform')
+const transform = document.getElementById('transform');
 transform.addEventListener('click', () => {
-  activeTool.paintBucket = false
-  activeTool.colorPicker = false
-  activeTool.move = false
-  activeTool.transform = true
-})
+  activeTool.paintBucket = false;
+  activeTool.colorPicker = false;
+  activeTool.move = false;
+  activeTool.transform = true;
+});
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('contextmenu', () => {
-  activeTool.paintBucket = false
-  activeTool.colorPicker = false
-  activeTool.move = false
-  activeTool.transform = false
-})
+  activeTool.paintBucket = false;
+  activeTool.colorPicker = false;
+  activeTool.move = false;
+  activeTool.transform = false;
+});
 
-canvas.addEventListener('click', e => {
-  if (activeTool.paintBucket) changeColor(e)
-})
+
+function liesIn(event, fig) {
+  if (fig.shape === 'rectangle') {
+    if (event.offsetX >= fig.x && event.offsetX <= fig.x + width) {
+      if (event.offsetY >= fig.y && event.offsetY <= fig.y + height) return true;
+    }
+    return false;
+  }
+  if (((((event.offsetX - fig.centerX) ** 2) + ((event.offsetY - fig.centerY) ** 2)) ** 0.5) < width) return true;
+  return false;
+}
 
 function changeColor(event) {
-  for (let i = 0; i < 9; i++) {
+  for (let i = 0; i < 9; i += 1) {
     if (figures[i].shape === 'rectangle' && liesIn(event, figures[i])) {
-      figures[i].color = currentColor
-      cnv.clearRect(figures[i].x, figures[i].y, width, height)
-      cnv.fillStyle = figures[i].color
-      cnv.fillRect(figures[i].x, figures[i].y, width, height)
+      figures[i].color = currentColor;
+      cnv.clearRect(figures[i].x, figures[i].y, width, height);
+      cnv.fillStyle = figures[i].color;
+      cnv.fillRect(figures[i].x, figures[i].y, width, height);
     }
 
     if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
-      figures[i].color = currentColor
-      cnv.beginPath()
-      cnv.fillStyle = 'white'
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI*2,true)
-      cnv.fill()
-      cnv.fillStyle = figures[i].color
-      cnv.beginPath()
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI*2,true)
-      cnv.fill()
+      figures[i].color = currentColor;
+      cnv.beginPath();
+      cnv.fillStyle = 'white';
+      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
+      cnv.fill();
+      cnv.fillStyle = figures[i].color;
+      cnv.beginPath();
+      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
+      cnv.fill();
     }
   }
 }
 
-function liesIn(event, fig) {
-  if (fig.shape == 'rectangle') {
-    if (event.offsetX >= fig.x && event.offsetX <= fig.x + width)
-      if (event.offsetY >= fig.y && event.offsetY <= fig.y + height) return true
-    return false;
-  }
-  if (Math.pow(Math.pow(event.offsetX - fig.centerX, 2) + Math.pow(event.offsetY - fig.centerY, 2), 0.5) < width) return true
-  return false
-}
-
+canvas.addEventListener('click', (e) => {
+  if (activeTool.paintBucket) changeColor(e);
+});
 
 
 document.getElementById('previous').addEventListener('click', () => {
-  current.style.backgroundColor = previousColor
-  previous.style.backgroundColor = currentColor
-  let tmp = previousColor
-  previousColor = currentColor
-  currentColor = tmp
-})
+  current.style.backgroundColor = previousColor;
+  previous.style.backgroundColor = currentColor;
+  const tmp = previousColor;
+  previousColor = currentColor;
+  currentColor = tmp;
+});
