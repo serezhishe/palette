@@ -8,29 +8,59 @@
   <link rel="stylesheet" href="./src/style.css" type="text/css">
 </head>
 <body>
-  <header>CodeJam - Palette</header>
+  <header>
+    <h1>CodeJam - Palette</h1>
+    </header>
   <main>
-    <aside id="palette">
+    <aside id="tools">
       <div id="colorTools">
-        <div id="paintBucket"></div>
-        <div id="colorPicker"></div>
+        <div id="paintBucket">
+          <img src="./src/assests/bucket.png" alt="">
+          <h2>Paint bucket</h2>
+        </div>
+        <div id="colorPicker">
+            <img src="./src/assests/picker.png" alt="">
+            <h2>Choose color</h2>
+        </div>
       </div>
-      <div id="transformTools"></div>
+      <div id="transformTools">
+        <div id="move">
+            <img src="./src/assests/move.png" alt="">
+            <h2>Move</h2>
+        </div>
+        <div id="transform">
+          <img src="./src/assests/transform.png" alt="">
+          <h2>Transform</h2>
+        </div>
+      </div>
     </aside>
     <aside id="colors">
       <div id="changebale">
-        <div id="current"></div>
-        <div id="previous"></div>
+        <div id="current">
+          <div id="curr"></div>
+          <h2>Current color</h2>
+        </div>
+        <div id="previous">
+            <div id="prev"></div>
+            <h2>Previous color</h2>
+        </div>
       </div>
       <div id="predefined">
-        <div id="first"></div>
-        <div id="second"></div>
-        <input type="color">
+        <div id="first">
+          <div id="red"></div>
+          <h2>red</h2>
+        </div>
+        <div id="second">
+          <div id="blue"></div>
+          <h2>blue</h2>
+        </div>
+        <div id="personal">
+          <input type="color" id="palette">
+          <label for="palette"><h2>Color palette</h2></label>
+        </div>
       </div>
     </aside>
-    <canvas>
-
-    </canvas>
+    <canvas></canvas>
   </main>
   <script src="./src/index.js"></script>
 </body>
