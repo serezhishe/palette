@@ -98,6 +98,23 @@ canvas {
   top: 15%;
   height: 40%;
   padding-left: 10%;
+  width: 100%;
+}
+
+#paintBucket:hover {
+  cursor: pointer;
+}
+
+#colorPicker:hover {
+  cursor: pointer;
+}
+
+#move:hover {
+  cursor: pointer;
+}
+
+#transform:hover {
+  cursor: pointer;
 }
 
 h2 {
