@@ -117,6 +117,22 @@ canvas {
   cursor: pointer;
 }
 
+#current:hover {
+  cursor: pointer;
+}
+
+#previous:hover {
+  cursor: pointer;
+}
+
+#first:hover {
+  cursor: pointer;
+}
+
+#second:hover {
+  cursor: pointer;
+}
+
 h2 {
   top: -10%;
   position: relative;
@@ -140,7 +156,7 @@ h2 {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background: #C4C4C4;
+  background-color: #C4C4C4;
   border: 1px solid #000000;
   box-sizing: border-box;
   display: inline-block;
@@ -150,7 +166,7 @@ h2 {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background: #41F795;
+  background-color: #41F795;
   border: 1px solid #000000;
   box-sizing: border-box;
   display: inline-block;
@@ -160,7 +176,7 @@ h2 {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background: #F74141;
+  background-color: #F74141;
   border: 1px solid #000000;
   box-sizing: border-box;
   display: inline-block;
@@ -170,7 +186,7 @@ h2 {
   width: 20px;
   height: 20px;
   border-radius: 10px;
-  background: #41B6F7;
+  background-color: #41B6F7;
   border: 1px solid #000000;
   box-sizing: border-box;
   display: inline-block;
