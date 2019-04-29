@@ -12,7 +12,7 @@ const activeTool = {
   transform: false,
 };
 
-const figures = [];
+let figures = [];
 class Figure {
   constructor(x, y, color, shape) {
     this.x = x;
@@ -47,9 +47,7 @@ figures.forEach((el) => {
 
 const current = document.getElementById('curr');
 const previous = document.getElementById('prev');
-const first = document.getElementById('first');
 const redColor = document.getElementById('red');
-const second = document.getElementById('second');
 const blueColor = document.getElementById('blue');
 const personal = document.getElementById('personal');
 const input = document.getElementsByTagName('input')[0];
@@ -88,6 +86,7 @@ transform.addEventListener('click', () => {
   activeTool.move = false;
   activeTool.transform = true;
 });
+
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('contextmenu', () => {
   activeTool.paintBucket = false;
@@ -97,14 +96,16 @@ document.addEventListener('contextmenu', () => {
 });
 
 
-function liesIn(event, fig) {
+function liesIn(e, fig) {
   if (fig.shape === 'rectangle') {
-    if (event.offsetX >= fig.x && event.offsetX <= fig.x + width) {
-      if (event.offsetY >= fig.y && event.offsetY <= fig.y + height) return true;
+    if (e.offsetX >= fig.x && e.offsetX <= fig.x + width) {
+      if (e.offsetY >= fig.y && e.offsetY <= fig.y + height) return true;
     }
     return false;
   }
-  if (((((event.offsetX - fig.centerX) ** 2) + ((event.offsetY - fig.centerY) ** 2)) ** 0.5) < width / 2) return true;
+  if (((((e.offsetX - fig.centerX) ** 2) + ((e.offsetY - fig.centerY) ** 2)) ** 0.5) < width / 2) {
+    return true;
+  }
   return false;
 }
 
@@ -131,15 +132,11 @@ function changeColor(event) {
   }
 }
 
-canvas.addEventListener('click', (e) => {
-  if (activeTool.paintBucket) changeColor(e);
-});
-
 
 document.getElementById('previous').addEventListener('click', () => {
   current.style.backgroundColor = previousColor;
   previous.style.backgroundColor = currentColor;
-  let tmp = previousColor;
+  const tmp = previousColor;
   previousColor = currentColor;
   currentColor = tmp;
 });
@@ -172,8 +169,38 @@ document.getElementById('personal').addEventListener('click', () => {
 });
 
 personal.addEventListener('click', () => {
-  input.addEventListener("change", event => {
-    personalColor = event.target.value
+  input.addEventListener('change', (event) => {
+    personalColor = event.target.value;
   });
   input.select();
-})
+});
+
+
+function transformation(event) {
+  for (let i = 0; i < 9; i += 1) {
+    if (figures[i].shape === 'rectangle' && liesIn(event, figures[i])) {
+      figures[i].shape = 'circle';
+      cnv.clearRect(figures[i].x, figures[i].y, width, height);
+      cnv.fillStyle = figures[i].color;
+      cnv.beginPath();
+      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
+      cnv.fill();
+      return;
+    }
+
+    if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
+      figures[i].shape = 'rectangle';
+      cnv.beginPath();
+      cnv.fillStyle = 'white';
+      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
+      cnv.fill();
+      cnv.fillStyle = figures[i].color;
+      cnv.fillRect(figures[i].x, figures[i].y, width, height);
+    }
+  }
+}
+
+canvas.addEventListener('click', e => {
+  if (activeTool.paintBucket) changeColor(e);
+  if (activeTool.transform) transformation(e);
+});
