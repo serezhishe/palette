@@ -12,7 +12,7 @@ const activeTool = {
   transform: false,
 };
 
-let figures = [];
+const figures = [];
 class Figure {
   constructor(x, y, color, shape) {
     this.x = x;
@@ -27,7 +27,7 @@ class Figure {
 let x = canvas.width - 3 * (width + 10) - 50;
 let y = canvas.height / 10;
 for (let i = 0; i < 9; i += 1) {
-  figures.push(new Figure(x, y, '#C4C4C4', 'rectangle'));
+  figures.push(new Figure(x, y, 'rgba(196, 196, 196, 255)', 'rectangle'));
   x += width + 10;
   if (i % 3 === 2) {
     x = canvas.width - 3 * (width + 10) - 50;
@@ -200,7 +200,19 @@ function transformation(event) {
   }
 }
 
-canvas.addEventListener('click', e => {
+function chooseColor(e) {
+  const piks = cnv.getImageData(e.offsetX, e.offsetY, 1, 1).data;
+  const piksColor = `rgba(${piks[0]}, ${piks[1]}, ${piks[2]}, ${piks[3]})`;
+  if (currentColor !== piksColor) {
+    previous.style.backgroundColor = currentColor;
+    previousColor = currentColor;
+    currentColor = piksColor;
+    current.style.backgroundColor = currentColor;
+  }
+}
+
+canvas.addEventListener('click', (e) => {
   if (activeTool.paintBucket) changeColor(e);
   if (activeTool.transform) transformation(e);
+  if (activeTool.colorPicker) chooseColor(e);
 });
