@@ -27,7 +27,7 @@ class Figure {
 let x = canvas.width - 3 * (width + 10) - 50;
 let y = canvas.height / 10;
 for (let i = 0; i < 9; i += 1) {
-  figures.push(new Figure(x, y, 'rgba(196, 196, 196, 255)', 'rectangle'));
+  figures.push(new Figure(x, y, 'rgb(196, 196, 196)', 'rectangle'));
   x += width + 10;
   if (i % 3 === 2) {
     x = canvas.width - 3 * (width + 10) - 50;
@@ -120,10 +120,6 @@ function changeColor(event) {
 
     if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
       figures[i].color = currentColor;
-      cnv.beginPath();
-      cnv.fillStyle = 'white';
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
-      cnv.fill();
       cnv.fillStyle = figures[i].color;
       cnv.beginPath();
       cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
@@ -211,8 +207,45 @@ function chooseColor(e) {
   }
 }
 
+
+function movement(e, figure) {
+  canvas.onmousemove = (e) => {
+    cnv.clearRect(figure.x - 2, figure.y - 2, width + 4, height + 4);
+    figure.x += e.movementX;
+    figure.y += e.movementY;
+    figure.centerX += e.movementX;
+    figure.centerY += e.movementY;
+
+    figures.forEach((el) => {
+      cnv.fillStyle = el.color;
+      if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height);
+      if (el.shape === 'circle') {
+        cnv.beginPath();
+        debugger
+        cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI * 2, true);
+        cnv.fill();
+      }
+    });
+  }
+}
+
 canvas.addEventListener('click', (e) => {
   if (activeTool.paintBucket) changeColor(e);
   if (activeTool.transform) transformation(e);
   if (activeTool.colorPicker) chooseColor(e);
 });
+
+canvas.addEventListener('mousedown', (e) => {
+  if (activeTool.move) {
+    for (let i = 8; i >= 0; i -= 1) {
+      if (liesIn(e, figures[i])) {
+        movement(e, figures[i]);
+        return;
+      }
+    }
+  }
+});
+
+canvas.addEventListener('mouseup', () => {
+  if (activeTool.move) canvas.onmousemove = null;
+})
