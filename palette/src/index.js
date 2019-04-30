@@ -12,7 +12,7 @@ let currentColor = window.getComputedStyle(current, null).getPropertyValue('back
 let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
 let storage = window.localStorage;
 
-if (storage.getItem('figures').length) {
+if (storage.getItem('figures') && storage.getItem('figures').length) {
   previousColor = storage.getItem('previous');
   previousColor = previousColor.split('').splice(1, previousColor.length - 2).join('')
   currentColor = storage.getItem('current');
