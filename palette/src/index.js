@@ -6,17 +6,17 @@ const height = Math.round(canvas.height * 0.8 / 3);
 const width = height;
 
 let figures = [];
-let current = document.getElementById('curr');
-let previous = document.getElementById('prev');
+const current = document.getElementById('curr');
+const previous = document.getElementById('prev');
 let currentColor = window.getComputedStyle(current, null).getPropertyValue('background-color');
 let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
-let storage = window.localStorage;
+const storage = window.localStorage;
 
 if (storage.getItem('figures') && storage.getItem('figures').length) {
   previousColor = storage.getItem('previous');
-  previousColor = previousColor.split('').splice(1, previousColor.length - 2).join('')
+  previousColor = previousColor.split('').splice(1, previousColor.length - 2).join('');
   currentColor = storage.getItem('current');
-  currentColor = currentColor.split('').splice(1, currentColor.length - 2).join('')
+  currentColor = currentColor.split('').splice(1, currentColor.length - 2).join('');
   figures = JSON.parse(storage.getItem('figures'));
   current.style.backgroundColor = currentColor;
   previous.style.backgroundColor = previousColor;
@@ -42,14 +42,14 @@ class Figure {
 let x = canvas.width - 3 * (width + 10) - 50;
 let y = canvas.height / 10;
 if (!figures.length) {
-for (let i = 0; i < 9; i += 1) {
-  figures.push(new Figure(x, y, 'rgb(196, 196, 196)', 'rectangle'));
-  x += width + 10;
-  if (i % 3 === 2) {
-    x = canvas.width - 3 * (width + 10) - 50;
-    y += height + 10;
+  for (let i = 0; i < 9; i += 1) {
+    figures.push(new Figure(x, y, 'rgb(196, 196, 196)', 'rectangle'));
+    x += width + 10;
+    if (i % 3 === 2) {
+      x = canvas.width - 3 * (width + 10) - 50;
+      y += height + 10;
+    }
   }
-}
 }
 figures[6].shape = 'circle';
 figures.forEach((el) => {
@@ -69,47 +69,47 @@ const input = document.getElementsByTagName('input')[0];
 let personalColor = input.value;
 
 const paintBucket = document.getElementById('paintBucket');
+const colorPicker = document.getElementById('colorPicker');
+const move = document.getElementById('move');
+const transform = document.getElementById('transform');
 paintBucket.addEventListener('click', () => {
-  paintBucket.style.background = '#8f8f8f'
-  colorPicker.style.background = 'white'
-  move.style.background = 'white'
-  transform.style.background = 'white'
+  paintBucket.style.background = '#8f8f8f';
+  colorPicker.style.background = 'white';
+  move.style.background = 'white';
+  transform.style.background = 'white';
   activeTool.paintBucket = true;
   activeTool.colorPicker = false;
   activeTool.move = false;
   activeTool.transform = false;
 });
 
-const colorPicker = document.getElementById('colorPicker');
 colorPicker.addEventListener('click', () => {
-  paintBucket.style.background = 'white'
-  colorPicker.style.background = '#8f8f8f'
-  move.style.background = 'white'
-  transform.style.background = 'white'
+  paintBucket.style.background = 'white';
+  colorPicker.style.background = '#8f8f8f';
+  move.style.background = 'white';
+  transform.style.background = 'white';
   activeTool.paintBucket = false;
   activeTool.colorPicker = true;
   activeTool.move = false;
   activeTool.transform = false;
 });
 
-const move = document.getElementById('move');
 move.addEventListener('click', () => {
-  paintBucket.style.background = 'white'
-  colorPicker.style.background = 'white'
-  move.style.background = '#8f8f8f'
-  transform.style.background = 'white'
+  paintBucket.style.background = 'white';
+  colorPicker.style.background = 'white';
+  move.style.background = '#8f8f8f';
+  transform.style.background = 'white';
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = true;
   activeTool.transform = false;
 });
 
-const transform = document.getElementById('transform');
 transform.addEventListener('click', () => {
-  paintBucket.style.background = 'white'
-  colorPicker.style.background = 'white'
-  move.style.background = 'white'
-  transform.style.background = '#8f8f8f'
+  paintBucket.style.background = 'white';
+  colorPicker.style.background = 'white';
+  move.style.background = 'white';
+  transform.style.background = '#8f8f8f';
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = false;
@@ -118,10 +118,10 @@ transform.addEventListener('click', () => {
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('contextmenu', () => {
-  paintBucket.style.background = 'white'
-  colorPicker.style.background = 'white'
-  move.style.background = 'white'
-  transform.style.background = 'white'
+  paintBucket.style.background = 'white';
+  colorPicker.style.background = 'white';
+  move.style.background = 'white';
+  transform.style.background = 'white';
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = false;
@@ -269,7 +269,7 @@ canvas.addEventListener('click', (e) => {
   if (activeTool.colorPicker) chooseColor(e);
 });
 
-let posBefore = {};
+const posBefore = {};
 canvas.addEventListener('mousedown', (e) => {
   if (activeTool.move) {
     for (let i = 8; i >= 0; i -= 1) {
@@ -289,7 +289,7 @@ canvas.addEventListener('mousedown', (e) => {
 
 canvas.addEventListener('mouseup', (e) => {
   if (activeTool.move) {
-    let tmp = figures.find((elem, index) => liesIn(e, elem) && index !== j)
+    const tmp = figures.find((elem, index) => liesIn(e, elem) && index !== j);
     if (tmp) {
       figures[j].x = tmp.x;
       figures[j].y = tmp.y;
@@ -316,38 +316,38 @@ canvas.addEventListener('mouseup', (e) => {
 });
 
 document.addEventListener('keypress', (e) => {
-  if (e.code === "KeyP") {
+  if (e.code === 'KeyP') {
     activeTool.paintBucket = true;
     activeTool.colorPicker = false;
     activeTool.move = false;
     activeTool.transform = false;
   }
 
-  if (e.code === "KeyC") {
+  if (e.code === 'KeyC') {
     activeTool.paintBucket = false;
-    activeTool.colorPicker = true
+    activeTool.colorPicker = true;
     activeTool.move = false;
     activeTool.transform = false;
   }
 
-  if (e.code === "KeyM") {
+  if (e.code === 'KeyM') {
     activeTool.paintBucket = false;
     activeTool.colorPicker = false;
     activeTool.move = true;
     activeTool.transform = false;
   }
 
-  if (e.code === "KeyT") {
+  if (e.code === 'KeyT') {
     activeTool.paintBucket = false;
     activeTool.colorPicker = false;
     activeTool.move = false;
     activeTool.transform = true;
   }
-}); 
+});
 
-window.onbeforeunload = function (evt) {
-	storage.setItem('figures', JSON.stringify(figures))
-	storage.setItem('current', JSON.stringify(currentColor))
-  storage.setItem('previous', JSON.stringify(previousColor))
-  return;
-}
+window.onbeforeunload = () => {
+  storage.setItem('figures', JSON.stringify(figures));
+  storage.setItem('current', JSON.stringify(currentColor));
+  storage.setItem('previous', JSON.stringify(previousColor));
+  return 0;
+};
