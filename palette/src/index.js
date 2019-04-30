@@ -116,6 +116,7 @@ function changeColor(event) {
       cnv.clearRect(figures[i].x, figures[i].y, width, height);
       cnv.fillStyle = figures[i].color;
       cnv.fillRect(figures[i].x, figures[i].y, width, height);
+      return;
     }
 
     if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
@@ -124,6 +125,7 @@ function changeColor(event) {
       cnv.beginPath();
       cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
       cnv.fill();
+      return;
     }
   }
 }
@@ -176,23 +178,21 @@ function transformation(event) {
   for (let i = 0; i < 9; i += 1) {
     if (figures[i].shape === 'rectangle' && liesIn(event, figures[i])) {
       figures[i].shape = 'circle';
-      cnv.clearRect(figures[i].x, figures[i].y, width, height);
-      cnv.fillStyle = figures[i].color;
-      cnv.beginPath();
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
-      cnv.fill();
-      return;
+      cnv.clearRect(figures[i].x - 1, figures[i].y - 1, width + 2, height + 2);
+    } else if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
+      figures[i].shape = 'rectangle';
+      cnv.clearRect(figures[i].x - 1, figures[i].y - 1, width + 2, height + 2);
     }
 
-    if (figures[i].shape === 'circle' && liesIn(event, figures[i])) {
-      figures[i].shape = 'rectangle';
-      cnv.beginPath();
-      cnv.fillStyle = 'white';
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
-      cnv.fill();
-      cnv.fillStyle = figures[i].color;
-      cnv.fillRect(figures[i].x, figures[i].y, width, height);
-    }
+    figures.forEach((el) => {
+      cnv.fillStyle = el.color;
+      if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height);
+      if (el.shape === 'circle') {
+        cnv.beginPath();
+        cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI * 2, true);
+        cnv.fill();
+      }
+    });
   }
 }
 
@@ -207,26 +207,27 @@ function chooseColor(e) {
   }
 }
 
+let j;
 
-function movement(e, figure) {
+function movement(k) {
   canvas.onmousemove = (e) => {
-    cnv.clearRect(figure.x - 2, figure.y - 2, width + 4, height + 4);
-    figure.x += e.movementX;
-    figure.y += e.movementY;
-    figure.centerX += e.movementX;
-    figure.centerY += e.movementY;
+    cnv.clearRect(figures[k].x - 1, figures[k].y - 1, width + 2, height + 2);
+    figures[k].x += e.movementX;
+    figures[k].y += e.movementY;
+    figures[k].centerX += e.movementX;
+    figures[k].centerY += e.movementY;
+
 
     figures.forEach((el) => {
       cnv.fillStyle = el.color;
       if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height);
       if (el.shape === 'circle') {
         cnv.beginPath();
-        debugger
         cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI * 2, true);
         cnv.fill();
       }
     });
-  }
+  };
 }
 
 canvas.addEventListener('click', (e) => {
@@ -235,17 +236,48 @@ canvas.addEventListener('click', (e) => {
   if (activeTool.colorPicker) chooseColor(e);
 });
 
+let posBefore = {};
 canvas.addEventListener('mousedown', (e) => {
   if (activeTool.move) {
     for (let i = 8; i >= 0; i -= 1) {
       if (liesIn(e, figures[i])) {
-        movement(e, figures[i]);
+        j = i;
+        posBefore.x = figures[j].x;
+        posBefore.y = figures[j].y;
+        posBefore.centerX = figures[j].centerX;
+        posBefore.centerY = figures[j].centerY;
+
+        movement(i);
         return;
       }
     }
   }
 });
 
-canvas.addEventListener('mouseup', () => {
-  if (activeTool.move) canvas.onmousemove = null;
-})
+canvas.addEventListener('mouseup', (e) => {
+  if (activeTool.move) {
+    let tmp = figures.find((elem, index) => liesIn(e, elem) && index !== j)
+    if (tmp) {
+      figures[j].x = tmp.x;
+      figures[j].y = tmp.y;
+      figures[j].centerX = tmp.centerX;
+      figures[j].centerY = tmp.centerY;
+      tmp.x = posBefore.x;
+      tmp.y = posBefore.y;
+      tmp.centerX = posBefore.centerX;
+      tmp.centerY = posBefore.centerY;
+    }
+
+    cnv.clearRect(0, 0, canvas.width, canvas.height);
+    figures.forEach((el) => {
+      cnv.fillStyle = el.color;
+      if (el.shape === 'rectangle') cnv.fillRect(el.x, el.y, width, height);
+      if (el.shape === 'circle') {
+        cnv.beginPath();
+        cnv.arc(el.centerX, el.centerY, width / 2, 0, Math.PI * 2, true);
+        cnv.fill();
+      }
+    });
+    canvas.onmousemove = null;
+  }
+});
