@@ -5,6 +5,22 @@ canvas.width = document.getElementsByTagName('main')[0].offsetWidth;
 const height = Math.round(canvas.height * 0.8 / 3);
 const width = height;
 
+let figures = [];
+let current = document.getElementById('curr');
+let previous = document.getElementById('prev');
+let currentColor = window.getComputedStyle(current, null).getPropertyValue('background-color');
+let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
+let storage = window.localStorage;
+
+if (storage.getItem('figures').length) {
+  previousColor = storage.getItem('previous');
+  previousColor = previousColor.split('').splice(1, previousColor.length - 2).join('')
+  currentColor = storage.getItem('current');
+  currentColor = currentColor.split('').splice(1, currentColor.length - 2).join('')
+  figures = JSON.parse(storage.getItem('figures'));
+  current.style.backgroundColor = currentColor;
+  previous.style.backgroundColor = previousColor;
+}
 const activeTool = {
   paintBucket: false,
   colorPicker: false,
@@ -12,7 +28,6 @@ const activeTool = {
   transform: false,
 };
 
-const figures = [];
 class Figure {
   constructor(x, y, color, shape) {
     this.x = x;
@@ -26,6 +41,7 @@ class Figure {
 
 let x = canvas.width - 3 * (width + 10) - 50;
 let y = canvas.height / 10;
+if (!figures.length) {
 for (let i = 0; i < 9; i += 1) {
   figures.push(new Figure(x, y, 'rgb(196, 196, 196)', 'rectangle'));
   x += width + 10;
@@ -33,6 +49,7 @@ for (let i = 0; i < 9; i += 1) {
     x = canvas.width - 3 * (width + 10) - 50;
     y += height + 10;
   }
+}
 }
 figures[6].shape = 'circle';
 figures.forEach((el) => {
@@ -45,18 +62,18 @@ figures.forEach((el) => {
   }
 });
 
-const current = document.getElementById('curr');
-const previous = document.getElementById('prev');
 const redColor = document.getElementById('red');
 const blueColor = document.getElementById('blue');
 const personal = document.getElementById('personal');
 const input = document.getElementsByTagName('input')[0];
 let personalColor = input.value;
-let currentColor = window.getComputedStyle(current, null).getPropertyValue('background-color');
-let previousColor = window.getComputedStyle(previous, null).getPropertyValue('background-color');
 
 const paintBucket = document.getElementById('paintBucket');
 paintBucket.addEventListener('click', () => {
+  paintBucket.style.background = '#8f8f8f'
+  colorPicker.style.background = 'white'
+  move.style.background = 'white'
+  transform.style.background = 'white'
   activeTool.paintBucket = true;
   activeTool.colorPicker = false;
   activeTool.move = false;
@@ -65,6 +82,10 @@ paintBucket.addEventListener('click', () => {
 
 const colorPicker = document.getElementById('colorPicker');
 colorPicker.addEventListener('click', () => {
+  paintBucket.style.background = 'white'
+  colorPicker.style.background = '#8f8f8f'
+  move.style.background = 'white'
+  transform.style.background = 'white'
   activeTool.paintBucket = false;
   activeTool.colorPicker = true;
   activeTool.move = false;
@@ -73,6 +94,10 @@ colorPicker.addEventListener('click', () => {
 
 const move = document.getElementById('move');
 move.addEventListener('click', () => {
+  paintBucket.style.background = 'white'
+  colorPicker.style.background = 'white'
+  move.style.background = '#8f8f8f'
+  transform.style.background = 'white'
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = true;
@@ -81,6 +106,10 @@ move.addEventListener('click', () => {
 
 const transform = document.getElementById('transform');
 transform.addEventListener('click', () => {
+  paintBucket.style.background = 'white'
+  colorPicker.style.background = 'white'
+  move.style.background = 'white'
+  transform.style.background = '#8f8f8f'
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = false;
@@ -89,6 +118,10 @@ transform.addEventListener('click', () => {
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 document.addEventListener('contextmenu', () => {
+  paintBucket.style.background = 'white'
+  colorPicker.style.background = 'white'
+  move.style.background = 'white'
+  transform.style.background = 'white'
   activeTool.paintBucket = false;
   activeTool.colorPicker = false;
   activeTool.move = false;
@@ -311,3 +344,10 @@ document.addEventListener('keypress', (e) => {
     activeTool.transform = true;
   }
 }); 
+
+window.onbeforeunload = function (evt) {
+	storage.setItem('figures', JSON.stringify(figures))
+	storage.setItem('current', JSON.stringify(currentColor))
+  storage.setItem('previous', JSON.stringify(previousColor))
+  return;
+}
