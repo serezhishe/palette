@@ -113,9 +113,9 @@ function changeColor(event) {
   for (let i = 0; i < 9; i += 1) {
     if (figures[i].shape === 'rectangle' && liesIn(event, figures[i])) {
       figures[i].color = currentColor;
-      cnv.clearRect(figures[i].x, figures[i].y, width, height);
+      cnv.clearRect(figures[i].x - 1, figures[i].y - 1, width + 2, height + 2);
       cnv.fillStyle = figures[i].color;
-      cnv.fillRect(figures[i].x, figures[i].y, width, height);
+      cnv.fillRect(figures[i].x - 1, figures[i].y - 1, width + 2, height + 2);
       return;
     }
 
@@ -123,7 +123,7 @@ function changeColor(event) {
       figures[i].color = currentColor;
       cnv.fillStyle = figures[i].color;
       cnv.beginPath();
-      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2, 0, Math.PI * 2, true);
+      cnv.arc(figures[i].centerX, figures[i].centerY, width / 2 + 1, 0, Math.PI * 2, true);
       cnv.fill();
       return;
     }
@@ -281,3 +281,33 @@ canvas.addEventListener('mouseup', (e) => {
     canvas.onmousemove = null;
   }
 });
+
+document.addEventListener('keypress', (e) => {
+  if (e.code === "KeyP") {
+    activeTool.paintBucket = true;
+    activeTool.colorPicker = false;
+    activeTool.move = false;
+    activeTool.transform = false;
+  }
+
+  if (e.code === "KeyC") {
+    activeTool.paintBucket = false;
+    activeTool.colorPicker = true
+    activeTool.move = false;
+    activeTool.transform = false;
+  }
+
+  if (e.code === "KeyM") {
+    activeTool.paintBucket = false;
+    activeTool.colorPicker = false;
+    activeTool.move = true;
+    activeTool.transform = false;
+  }
+
+  if (e.code === "KeyT") {
+    activeTool.paintBucket = false;
+    activeTool.colorPicker = false;
+    activeTool.move = false;
+    activeTool.transform = true;
+  }
+}); 
